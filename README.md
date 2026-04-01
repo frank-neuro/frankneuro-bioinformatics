@@ -2,6 +2,7 @@
 Specialized Python utilities for neuro-immune assay design and sequence processing
 
 Frank Neuro: Specialized Bioinformatics Toolkit 
+
 Precision CNS R&D | Translational Neuro-Immune Strategy
 
 This repository contains a suite of Python-driven bioinformatics tools developed by Frank Neuro to standardize and de-risk early-stage CNS research. These tools are designed to bridge the gap between deep-bench neuro-immune intuition and the rigorous data standards required for IND-enabling studies.
