@@ -21,7 +21,7 @@ PCR Specificity: Primers are designed to generate amplicons that span exon/exon 
 Specific Design: Engineered to minimize primer-dimer formation, non-specific binding in high-sensitivity qPCR/PCR workflows.
 Streamlit Interface: Features a web-native UI for rapid iteration in the lab. 
 
-3. Fasta Converter (fasta.py). A high-integrity utility for sanitizing and converting Genbank and raw sequence data into standardized FASTA formats for downstream bioinformatics pipelines. Data Integrity: Automates the removal of artifacts and formatting inconsistencies that often plague "wet-lab" sequence exports. Pipeline Ready: Outputs clean, header-standardized files ready for BLAST or alignment software. The converted sequence delineated exon/intron boundaries with exons in UPPERCASE and introns in lowercase, which serves as an input for processing in Primer Designer.
+3. Fasta Converter (fasta.py). A high-integrity utility for sanitizing and converting Genbank and raw sequence data into standardized FASTA formats for downstream bioinformatics pipelines. Data Integrity: Automates the removal of artifacts and formatting inconsistencies that often plague "wet-lab" sequence exports. Pipeline Ready: Outputs clean, header-standardized files ready for BLAST or alignment software. The converted sequence delineates exon/intron boundaries with exons in UPPERCASE and introns in lowercase, which serves as an input for processing in Primer Designer.
 
 🚀 Installation & Usage
 
