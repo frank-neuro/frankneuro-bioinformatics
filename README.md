@@ -9,6 +9,7 @@ This repository contains a suite of Python-driven bioinformatics tools developed
 🔬 About the Developer
 
 Matthew G. Frank, PhD Specialized Advisor | Founder, Frank Neuro 
+
 With over 100 publications and 10,000+ citations, my work in microglial priming, neuroinflammation, NLRP3 pathways and alarmins serves as the foundation for these tools. I developed this toolkit to provide the "Red Team" technical auditing required for high-fidelity CNS asset de-risking.
 
 🛠 Featured Tools. 
