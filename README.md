@@ -1,15 +1,19 @@
-# frankneuro-bioinformatics
+# Frankneuro-bioinformatics
 Specialized Python utilities for neuro-immune assay design and sequence processing
-Frank Neuro: Specialized Bioinformatics Toolkit
+
+Frank Neuro: Specialized Bioinformatics Toolkit 
 Precision CNS R&D | Translational Neuro-Immune Strategy
 
 This repository contains a suite of Python-driven bioinformatics tools developed by Frank Neuro to standardize and de-risk early-stage CNS research. These tools are designed to bridge the gap between deep-bench neuro-immune intuition and the rigorous data standards required for IND-enabling studies.
+
 🔬 About the Developer
 Matthew G. Frank, PhD Specialized Advisor | Founder, Frank Neuro With over 100 publications and 10,000+ citations, my work in microglial priming, neuroinflammation, and NLRP3 pathways serves as the foundation for these tools. I developed this toolkit to provide the "Red Team" technical auditing required for high-fidelity CNS asset de-risking.
+
 🛠 Featured Tools. 
-Primer Designer (primer.py). A thermodynamic-first approach to DNA primer design, specifically optimized for neuro-immune assays where target specificity is paramount.Thermodynamic Accuracy: Utilizes Nearest-Neighbor (NN) models to calculate melting temperatures ($T_m$), ensuring stability in complex neuro-inflammatory environments.
-Specific Design: Engineered to minimize primer-dimer formation and non-specific binding in high-sensitivity qPCR/PCR workflows.Streamlit Interface: Features a web-native UI for rapid iteration in the lab.2. 
-Fasta Converter (fasta.py). A high-integrity utility for sanitizing and converting Genbank and raw sequence data into standardized FASTA formats for downstream bioinformatics pipelines. Data Integrity: Automates the removal of artifacts and formatting inconsistencies that often plague "wet-lab" sequence exports.Pipeline Ready: Outputs clean, header-standardized files ready for BLAST or alignment software.
+1. Primer Designer (primer.py). A thermodynamic-first approach to DNA primer design, specifically optimized for neuro-immune assays where target specificity is paramount.Thermodynamic Accuracy: Utilizes Nearest-Neighbor (NN) models to calculate melting temperatures (Tm), ensuring stability in complex neuro-inflammatory environments.
+Specific Design: Engineered to minimize primer-dimer formation and non-specific binding in high-sensitivity qPCR/PCR workflows.Streamlit Interface: Features a web-native UI for rapid iteration in the lab. 
+2. Fasta Converter (fasta.py). A high-integrity utility for sanitizing and converting Genbank and raw sequence data into standardized FASTA formats for downstream bioinformatics pipelines. Data Integrity: Automates the removal of artifacts and formatting inconsistencies that often plague "wet-lab" sequence exports.Pipeline Ready: Outputs clean, header-standardized files ready for BLAST or alignment software.
+
 🚀 Installation & Usage
 To use the Frank Neuro toolkit locally:
 Clone the repository:
