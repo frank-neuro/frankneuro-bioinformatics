@@ -7,7 +7,9 @@ Precision CNS R&D | Translational Neuro-Immune Strategy
 This repository contains a suite of Python-driven bioinformatics tools developed by Frank Neuro to standardize and de-risk early-stage CNS research. These tools are designed to bridge the gap between deep-bench neuro-immune intuition and the rigorous data standards required for IND-enabling studies.
 
 🔬 About the Developer
-Matthew G. Frank, PhD Specialized Advisor | Founder, Frank Neuro With over 100 publications and 10,000+ citations, my work in microglial priming, neuroinflammation, and NLRP3 pathways serves as the foundation for these tools. I developed this toolkit to provide the "Red Team" technical auditing required for high-fidelity CNS asset de-risking.
+
+Matthew G. Frank, PhD Specialized Advisor | Founder, Frank Neuro 
+With over 100 publications and 10,000+ citations, my work in microglial priming, neuroinflammation, NLRP3 pathways and alarmins serves as the foundation for these tools. I developed this toolkit to provide the "Red Team" technical auditing required for high-fidelity CNS asset de-risking.
 
 🛠 Featured Tools. 
 1. Primer Designer (primer.py). A thermodynamic-first approach to DNA primer design, specifically optimized for neuro-immune assays where target specificity is paramount.Thermodynamic Accuracy: Utilizes Nearest-Neighbor (NN) models to calculate melting temperatures (Tm), ensuring stability in complex neuro-inflammatory environments.
