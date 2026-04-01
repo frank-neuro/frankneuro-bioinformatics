@@ -15,7 +15,9 @@ With over 100 publications and 10,000+ citations, my work in microglial priming,
 
 🛠 Featured Tools. 
 
-1. Primer Designer (primer.py). A thermodynamic-first approach to DNA primer design, specifically optimized for PCR assays where target specificity is paramount.Thermodynamic Accuracy: Utilizes Nearest-Neighbor (NN) models to calculate melting temperatures (Tm), ensuring stability in complex neuro-inflammatory environments. PCR Specificity: Primers are designed to generate amplicons that span exon/exon boundaries, thereby ensuring exclusion of genomic DNA amplification.
+1. Primer Designer (primer.py). A thermodynamic-first approach to DNA primer design, specifically optimized for PCR assays where target specificity is paramount.
+Thermodynamic Accuracy: Utilizes Nearest-Neighbor (NN) models to calculate melting temperatures (Tm), ensuring stability in complex neuro-inflammatory environments.
+PCR Specificity: Primers are designed to generate amplicons that span exon/exon boundaries, thereby ensuring exclusion of genomic DNA amplification.
 Specific Design: Engineered to minimize primer-dimer formation, non-specific binding in high-sensitivity qPCR/PCR workflows.
 Streamlit Interface: Features a web-native UI for rapid iteration in the lab. 
 
