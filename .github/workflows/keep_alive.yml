@@ -2,7 +2,8 @@ name: Keep Streamlit Apps Awake
 
 on:
   schedule:
-    - cron: '0 */4 * * *' # Every 4 hours
+    # Runs every 4 hours to stay well within the 12-hour sleep window
+    - cron: '0 */4 * * *'
   workflow_dispatch: 
 
 jobs:
@@ -11,7 +12,8 @@ jobs:
     steps:
       - name: Ping FASTA and Primer Utilities
         run: |
-          # The -L tells curl to follow redirects
-          # The -s suppresses the progress bar
+          # -L follows the 303 redirect to the actual app
+          # -s hides the progress bar for a cleaner log
           curl -L -s https://frankneuro-fasta.streamlit.app/ > /dev/null
           curl -L -s https://frankneuro-primer.streamlit.app/ > /dev/null
+          echo "Ping successful. Utilities are awake."
