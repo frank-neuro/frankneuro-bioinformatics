@@ -2,16 +2,15 @@ name: Keep Streamlit Apps Awake
 
 on:
   schedule:
-    # This runs every 8 hours (at 00:00, 08:00, and 16:00 UTC)
-    - cron: '0 */8 * * *'
-  workflow_dispatch: # This allows you to run it manually for testing
+    # Increased frequency to every 4 hours
+    - cron: '0 */4 * * *'
+  workflow_dispatch: 
 
 jobs:
   ping_apps:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping FASTA Utility
-        run: curl -I https://frankneuro-fasta.streamlit.app/
-
-      - name: Ping Primer Utility
-        run: curl -I https://frankneuro-primer.streamlit.app/
+      - name: Ping FASTA and Primer Utilities
+        run: |
+          curl -L -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" https://frankneuro-fasta.streamlit.app/
+          curl -L -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" https://frankneuro-primer.streamlit.app/
