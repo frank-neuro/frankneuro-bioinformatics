@@ -2,8 +2,7 @@ name: Keep Streamlit Apps Awake
 
 on:
   schedule:
-    # Increased frequency to every 4 hours
-    - cron: '0 */4 * * *'
+    - cron: '0 */4 * * *' # Every 4 hours
   workflow_dispatch: 
 
 jobs:
@@ -12,5 +11,7 @@ jobs:
     steps:
       - name: Ping FASTA and Primer Utilities
         run: |
-          curl -L -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" https://frankneuro-fasta.streamlit.app/
-          curl -L -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" https://frankneuro-primer.streamlit.app/
+          # The -L tells curl to follow redirects
+          # The -s suppresses the progress bar
+          curl -L -s https://frankneuro-fasta.streamlit.app/ > /dev/null
+          curl -L -s https://frankneuro-primer.streamlit.app/ > /dev/null
