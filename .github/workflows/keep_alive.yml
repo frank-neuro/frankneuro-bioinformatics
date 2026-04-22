@@ -5,16 +5,17 @@ on:
     - cron: '0 */4 * * *'
   workflow_dispatch: 
 
-env:
-  # This is the primary directive to tell the runner to ignore Node 20
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   wake_up:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository
+        # Updated to v5 (Node 24 Native)
+        uses: actions/checkout@v5
+
       - name: Set up Python
-        uses: actions/setup-python@v5 # Stable version
+        # Updated to v6 (Node 24 Native)
+        uses: actions/setup-python@v6
         with:
           python-version: '3.10'
 
@@ -45,6 +46,7 @@ jobs:
                   
                   if 'Zzzz' in driver.page_source or 'Wake up' in driver.page_source:
                       print(f'Detected Sleep Page at {url}. Attempting to wake...')
+                      # Standard Streamlit Cloud wake-up button selector
                       button = driver.find_element(By.XPATH, '//button[contains(., \"back up\")]')
                       button.click()
                       print('Clicked wake button.')
@@ -57,9 +59,10 @@ jobs:
           driver.quit()
           "
 
-      - name: Upload Screenshot
-        uses: actions/upload-artifact@v4 # Stable version
+      - name: Upload Screenshot Evidence
+        # Updated to v7 (Latest 2026 release)
+        uses: actions/upload-artifact@v7
         with:
           name: streamlit-screenshot
           path: "*.png"
-          if-no-files-found: ignore # Prevents the workflow from failing if no screenshot is taken
+          if-no-files-found: ignore
