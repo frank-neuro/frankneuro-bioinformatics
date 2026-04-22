@@ -1,24 +1,28 @@
-name: Wake Streamlit App
+name: Selenium App Waker
 
 on:
   schedule:
-    - cron: '0 */4 * * *' # Every 4 hours
+    - cron: '0 */4 * * *'
   workflow_dispatch: 
+
+env:
+  # This explicitly tells GitHub to use the new Node 24 engine now
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   wake_up:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Python
-        uses: actions/setup-python@v5
+        # Bumping from v5 to v6 for Node 24 support
+        uses: actions/setup-python@v6 
         with:
           python-version: '3.10'
 
-      - name: Install Selenium and Driver
-        run: |
-          pip install selenium webdriver-manager
+      - name: Install Selenium
+        run: pip install selenium webdriver-manager
 
-      - name: Run Wakeup Script
+      - name: Run Waker and Capture Evidence
         run: |
           python -c "
           from selenium import webdriver
@@ -26,30 +30,36 @@ jobs:
           from selenium.webdriver.common.by import By
           import time
 
-          urls = ['https://frankneuro-fasta.streamlit.app/', 'https://frankneuro-primer.streamlit.app/']
-          
           chrome_options = Options()
           chrome_options.add_argument('--headless')
           chrome_options.add_argument('--no-sandbox')
+          chrome_options.add_argument('--window-size=1920,1080')
           driver = webdriver.Chrome(options=chrome_options)
 
+          urls = ['https://frankneuro-fasta.streamlit.app/', 'https://frankneuro-primer.streamlit.app/']
+          
           for url in urls:
-              print(f'Visiting {url}...')
+              print(f'Navigating to {url}...')
               driver.get(url)
-              time.sleep(10) # Give it time to load the 'Zzzz' page
+              time.sleep(20) 
               
-              if 'Zzzz' in driver.page_source or 'Wake up' in driver.page_source:
-                  print('App is asleep. Attempting to click wake button...')
+              if 'Zzzz' in driver.page_source:
+                  print(f'Detected Sleep Page at {url}. Attempting to wake...')
                   try:
-                      # This looks for the 'Yes, get this app back up!' button
                       button = driver.find_element(By.XPATH, '//button[contains(., \"back up\")]')
                       button.click()
-                      print('Clicked! Waiting for container to spin up...')
-                      time.sleep(30)
+                      time.sleep(10)
                   except:
-                      print('Could not find button, but page was hit.')
+                      print('Could not find wake button.')
               else:
-                  print('App appears to be already awake.')
-          
+                  print(f'App at {url} is already active.')
+
           driver.quit()
           "
+
+      - name: Upload Screenshot Evidence
+        # Bumping from v4 to v6 for Node 24 support
+        uses: actions/upload-artifact@v6
+        with:
+          name: streamlit-screenshot
+          path: "*.png"
