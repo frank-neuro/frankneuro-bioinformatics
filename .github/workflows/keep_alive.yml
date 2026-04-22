@@ -1,18 +1,55 @@
-name: Keep Streamlit Apps Awake
+name: Wake Streamlit App
 
 on:
   schedule:
-    - cron: '0 */4 * * *'
+    - cron: '0 */4 * * *' # Every 4 hours
   workflow_dispatch: 
 
 jobs:
-  ping_apps:
+  wake_up:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping FASTA and Primer Utilities
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Selenium and Driver
         run: |
-          # We use a temporary file 'cookies.txt' to handle the session handshake
-          # This prevents the redirect loop (Error 47)
-          curl -L -b cookies.txt -c cookies.txt -s https://frankneuro-fasta.streamlit.app/ > /dev/null
-          curl -L -b cookies.txt -c cookies.txt -s https://frankneuro-primer.streamlit.app/ > /dev/null
-          echo "Handshake complete. Apps are awake."
+          pip install selenium webdriver-manager
+
+      - name: Run Wakeup Script
+        run: |
+          python -c "
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+          from selenium.webdriver.common.by import By
+          import time
+
+          urls = ['https://frankneuro-fasta.streamlit.app/', 'https://frankneuro-primer.streamlit.app/']
+          
+          chrome_options = Options()
+          chrome_options.add_argument('--headless')
+          chrome_options.add_argument('--no-sandbox')
+          driver = webdriver.Chrome(options=chrome_options)
+
+          for url in urls:
+              print(f'Visiting {url}...')
+              driver.get(url)
+              time.sleep(10) # Give it time to load the 'Zzzz' page
+              
+              if 'Zzzz' in driver.page_source or 'Wake up' in driver.page_source:
+                  print('App is asleep. Attempting to click wake button...')
+                  try:
+                      # This looks for the 'Yes, get this app back up!' button
+                      button = driver.find_element(By.XPATH, '//button[contains(., \"back up\")]')
+                      button.click()
+                      print('Clicked! Waiting for container to spin up...')
+                      time.sleep(30)
+                  except:
+                      print('Could not find button, but page was hit.')
+              else:
+                  print('App appears to be already awake.')
+          
+          driver.quit()
+          "
