@@ -6,7 +6,7 @@ on:
   workflow_dispatch: 
 
 env:
-  # This explicitly tells GitHub to use the new Node 24 engine now
+  # This is the primary directive to tell the runner to ignore Node 20
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
@@ -14,15 +14,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Python
-        # Bumping from v5 to v6 for Node 24 support
-        uses: actions/setup-python@v6 
+        uses: actions/setup-python@v5 # Stable version
         with:
           python-version: '3.10'
 
-      - name: Install Selenium
+      - name: Install Selenium and Webdriver
         run: pip install selenium webdriver-manager
 
-      - name: Run Waker and Capture Evidence
+      - name: Run Waker
         run: |
           python -c "
           from selenium import webdriver
@@ -40,26 +39,27 @@ jobs:
           
           for url in urls:
               print(f'Navigating to {url}...')
-              driver.get(url)
-              time.sleep(20) 
-              
-              if 'Zzzz' in driver.page_source:
-                  print(f'Detected Sleep Page at {url}. Attempting to wake...')
-                  try:
+              try:
+                  driver.get(url)
+                  time.sleep(15) 
+                  
+                  if 'Zzzz' in driver.page_source or 'Wake up' in driver.page_source:
+                      print(f'Detected Sleep Page at {url}. Attempting to wake...')
                       button = driver.find_element(By.XPATH, '//button[contains(., \"back up\")]')
                       button.click()
-                      time.sleep(10)
-                  except:
-                      print('Could not find wake button.')
-              else:
-                  print(f'App at {url} is already active.')
+                      print('Clicked wake button.')
+                      time.sleep(5)
+                  else:
+                      print(f'App at {url} is already active.')
+              except Exception as e:
+                  print(f'Error visiting {url}: {e}')
 
           driver.quit()
           "
 
-      - name: Upload Screenshot Evidence
-        # Bumping from v4 to v6 for Node 24 support
-        uses: actions/upload-artifact@v6
+      - name: Upload Screenshot
+        uses: actions/upload-artifact@v4 # Stable version
         with:
           name: streamlit-screenshot
           path: "*.png"
+          if-no-files-found: ignore # Prevents the workflow from failing if no screenshot is taken
