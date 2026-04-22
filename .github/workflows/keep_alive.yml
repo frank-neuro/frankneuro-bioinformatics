@@ -2,19 +2,17 @@ name: Selenium App Waker
 
 on:
   schedule:
-    - cron: '0 */4 * * *'
-  workflow_dispatch: 
+    - cron: '0 */4 * * *' # Runs every 4 hours
+  workflow_dispatch:      # Allows you to click "Run workflow" manually
 
 jobs:
   wake_up:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        # Updated to v5 (Node 24 Native)
         uses: actions/checkout@v5
 
       - name: Set up Python
-        # Updated to v6 (Node 24 Native)
         uses: actions/setup-python@v6
         with:
           python-version: '3.10'
@@ -36,31 +34,34 @@ jobs:
           chrome_options.add_argument('--window-size=1920,1080')
           driver = webdriver.Chrome(options=chrome_options)
 
-          urls = ['https://frankneuro-fasta.streamlit.app/', 'https://frankneuro-primer.streamlit.app/']
+          urls = {'FASTA': 'https://frankneuro-fasta.streamlit.app/', 'Primer': 'https://frankneuro-primer.streamlit.app/'}
           
-          for url in urls:
+          for name, url in urls.items():
               print(f'Navigating to {url}...')
               try:
                   driver.get(url)
+                  # Give the app 15 seconds to finish rendering
                   time.sleep(15) 
                   
+                  # Create a screenshot for the Artifacts section
+                  filename = f'{name}_status.png'
+                  driver.save_screenshot(filename)
+                  print(f'Screenshot saved: {filename}')
+                  
                   if 'Zzzz' in driver.page_source or 'Wake up' in driver.page_source:
-                      print(f'Detected Sleep Page at {url}. Attempting to wake...')
-                      # Standard Streamlit Cloud wake-up button selector
+                      print(f'Detected Sleep Page at {url}. Waking...')
                       button = driver.find_element(By.XPATH, '//button[contains(., \"back up\")]')
                       button.click()
-                      print('Clicked wake button.')
                       time.sleep(5)
                   else:
                       print(f'App at {url} is already active.')
               except Exception as e:
-                  print(f'Error visiting {url}: {e}')
+                  print(f'Error at {url}: {e}')
 
           driver.quit()
           "
 
       - name: Upload Screenshot Evidence
-        # Updated to v7 (Latest 2026 release)
         uses: actions/upload-artifact@v7
         with:
           name: streamlit-screenshot
