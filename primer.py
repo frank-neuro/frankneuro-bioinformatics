@@ -203,6 +203,11 @@ with tab1:
         )
 
         st.subheader("📊 Global Junction Evaluation")
+        st.caption(
+            "⚠️ **Note on Specificity:** High-efficiency primers may occasionally hit multiple genes in "
+            "multigenic genomic sequences. If non-specific hits occur, evaluate alternative junctions where "
+            "selectivity is prioritized over peak thermodynamic scores."
+        )
         display_cols = ["Rank", "Junction ID", "Penalty Score", "Cross-ΔG", "Forward", "Reverse", "Fwd Tm", "Rev Tm", "Product Size"]
         st.dataframe(master_data, column_order=display_cols, use_container_width=True)
 
@@ -219,8 +224,19 @@ with tab1:
         st.divider()
         st.subheader("📍 Junction-Specific Results")
         j_choice = st.selectbox("Select Junction:", [f"Junction {r['id']}" for r in results_list])
-        selected_idx = int(j_choice.split()[-1]) - 1
-        j_res = results_list[selected_idx]['results']
+        target_id = int(j_choice.split()[-1])
+	# 1. Get the ID number from the string (e.g., "Junction 2" -> 2)
+        target_id = int(j_choice.split()[-1])
+
+        # 2. Find the entry where the 'id' matches
+        j_entry = next((item for item in results_list if item.get('id') == target_id), None)
+
+        if j_entry:
+            j_res = j_entry['results']
+            st.success(f"Displaying results for Junction {target_id}")
+        else:
+            st.error(f"Could not find data for Junction {target_id}.")
+            j_res = []
         p_idx = st.radio(f"Select Pair for {j_choice}:", range(j_res.get('PRIMER_PAIR_NUM_RETURNED')), horizontal=True)
         
         f_s = j_res.get(f'PRIMER_LEFT_{p_idx}_SEQUENCE')
@@ -303,7 +319,7 @@ with tab2:
     
     st.subheader("2. Step-by-Step Instructions")
     st.markdown("""
-    1. **Enter**: Paste your converted FASTA sequence in the gray box. Ensure Exons are UPPERCASE and introns are lowercase. Use the "Fasta Converter" program to convert Genbank sequences into this Fasta format. 
+    1. **Enter**: Paste your converted FASTA sequence in the gray box. Ensure Exons are UPPERCASE and introns are lowercase. Use the "FASTA Converter" program to convert Genbank sequences into this FASTA format. 
     2. **Settings**: Select the number of primer pairs per junction under Evaluation Strategy and Adjust Global Primer Settings to define the thermodynamic and structural constraints of a primer pair. 
     4. **Process**: Click the **'Analyze All Junctions'** button to generate primer pairs for each exon-exon junction.
     5. **Review**: Check primer pairs to assess the differential in Tm (< 2 °C is optimal) and risk of primer dimer formation (A ΔG > -5 kcal/mol is low risk, ΔG between -5 to -9 kcal/mol is moderate risk, and ΔG =/< -9 kcal/mol is high risk).
