@@ -1,8 +1,7 @@
 import streamlit as st
 import primer3
 import re
-import os
-import signal
+
 
 st.set_page_config(page_title="Multi-Junction Primer Designer", layout="wide")
 
@@ -359,5 +358,3 @@ with tab2:
 
 st.sidebar.markdown("---")
 st.sidebar.markdown('<a href="https://www.ncbi.nlm.nih.gov/tools/primer-blast/" target="_blank" class="blast-button">🚀 Primer BLAST Validation</a>', unsafe_allow_html=True)
-if st.sidebar.button("Shut Down App", use_container_width=True):
-    os.kill(os.getpid(), signal.SIGINT)
