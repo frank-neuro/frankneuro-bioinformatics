@@ -5,8 +5,7 @@
 import streamlit as st
 from Bio import SeqIO
 import io
-import os
-import signal
+
 
 # --- PAGE CONFIG ---
 st.set_page_config(page_title="GenBank Converter", layout="centered")
@@ -121,17 +120,3 @@ with tab2:
     st.divider()
     st.caption("Developed by M.G. Frank | February 2026")
 
-# --- SIDEBAR UTILITIES ---
-st.sidebar.markdown("---")
-
-# The Shut Down Button
-if st.sidebar.button("Shut Down App"):
-    st.sidebar.warning("Shutting down...")
-    os.kill(os.getpid(), signal.SIGINT)
-
-# The Citation Section
-st.sidebar.markdown("### How to Cite")
-st.sidebar.info(
-    "If you use this tool for GenBank conversion in your research, please cite it as:\n\n"
-    "**Frank, M.G. (2026). GenBank to FASTA Converter. [Software].**"
-)
