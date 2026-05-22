@@ -34,7 +34,7 @@ jobs:
           chrome_options.add_argument('--window-size=1920,1080')
           driver = webdriver.Chrome(options=chrome_options)
 
-          urls = {'FASTA': 'https://frankneuro-fasta.streamlit.app/', 'Primer': 'https://frankneuro-primer.streamlit.app/'}
+          urls = {'FASTA': 'https://frankneuro-fasta.streamlit.app/', 'Primer': 'https://frankneuro-primer.streamlit.app/', 'qPCR': 'https://frankneuro-qpcr.streamlit.app/'}
           
           for name, url in urls.items():
               print(f'Navigating to {url}...')
