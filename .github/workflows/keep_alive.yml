@@ -3,58 +3,75 @@ name: Selenium App Waker
 on:
   schedule:
     - cron: '0 */4 * * *' # Runs every 4 hours
-  workflow_dispatch:      # Allows you to click "Run workflow" manually
+  workflow_dispatch:      # Allows manual trigger
 
 jobs:
   wake_up:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Install Selenium and Webdriver
-        run: pip install selenium webdriver-manager
+      - name: Setup Chrome Browser
+        uses: browser-actions/setup-chrome@v1
 
-      - name: Run Waker
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install selenium webdriver-manager
+
+      - name: Run Waker Script
         run: |
           python -c "
           from selenium import webdriver
           from selenium.webdriver.chrome.options import Options
           from selenium.webdriver.common.by import By
+          from selenium.webdriver.support.ui import WebDriverWait
+          from selenium.webdriver.support import expected_conditions as EC
           import time
 
           chrome_options = Options()
-          chrome_options.add_argument('--headless')
+          chrome_options.add_argument('--headless=new')
           chrome_options.add_argument('--no-sandbox')
+          chrome_options.add_argument('--disable-dev-shm-usage')
           chrome_options.add_argument('--window-size=1920,1080')
+          chrome_options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
+
           driver = webdriver.Chrome(options=chrome_options)
 
-          urls = {'FASTA': 'https://frankneuro-fasta.streamlit.app/', 'Primer': 'https://frankneuro-primer.streamlit.app/', 'qPCR': 'https://frankneuro-qpcr.streamlit.app/'}
+          urls = {
+              'FASTA': 'https://frankneuro-fasta.streamlit.app/',
+              'Primer': 'https://frankneuro-primer.streamlit.app/',
+              'qPCR': 'https://frankneuro-qpcr.streamlit.app/'
+          }
           
           for name, url in urls.items():
               print(f'Navigating to {url}...')
               try:
                   driver.get(url)
-                  # Give the app 15 seconds to finish rendering
-                  time.sleep(15) 
+                  time.sleep(10)  # Wait for initial JS execution
                   
-                  # Create a screenshot for the Artifacts section
+                  # Save initial state screenshot
                   filename = f'{name}_status.png'
                   driver.save_screenshot(filename)
                   print(f'Screenshot saved: {filename}')
                   
-                  if 'Zzzz' in driver.page_source or 'Wake up' in driver.page_source:
-                      print(f'Detected Sleep Page at {url}. Waking...')
-                      button = driver.find_element(By.XPATH, '//button[contains(., \"back up\")]')
-                      button.click()
-                      time.sleep(5)
+                  # Look for wake button using robust XPATH
+                  wake_buttons = driver.find_elements(By.XPATH, '//button[contains(translate(., \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\", \"abcdefghijklmnopqrstuvwxyz\"), \"back up\") or contains(., \"Wake\")]')
+                  
+                  if wake_buttons:
+                      print(f'Detected Sleep Page at {url}. Triggering Wake Up...')
+                      wake_buttons[0].click()
+                      time.sleep(15)  # Allow container cold-start
+                      driver.save_screenshot(f'{name}_waking.png')
                   else:
-                      print(f'App at {url} is already active.')
+                      print(f'App at {url} appears active.')
+                      
               except Exception as e:
                   print(f'Error at {url}: {e}')
 
@@ -62,8 +79,9 @@ jobs:
           "
 
       - name: Upload Screenshot Evidence
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: streamlit-screenshot
+          name: streamlit-screenshots
           path: "*.png"
           if-no-files-found: ignore
